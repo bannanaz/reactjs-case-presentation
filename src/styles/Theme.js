@@ -5,10 +5,16 @@ const theme = createTheme({
     primary: {
       main: "#629bb3",
       light: "#ecf4f8",
+      contrastText: "#ffffff",
     },
     secondary: {
       main: "#c90477",
       light: "#de2691",
+      contrastText: "#ffffff",
+    },
+    neutral: {
+      main: "#ffffff",
+      contrastText: "#c90477",
     },
   },
 
@@ -18,7 +24,7 @@ const theme = createTheme({
       fontSize: "26px",
       fontWeight: 600,
       color: "#3b3b3b",
-      marginBottom: "10px",
+      marginBottom: "15px",
     },
     h2: {
       fontSize: "20px",
@@ -30,12 +36,12 @@ const theme = createTheme({
       fontSize: "20px",
       fontWeight: 600,
       color: "#3b3b3b",
-      marginBottom: "10px",
+      marginBottom: "12px",
     },
     body1: {
       fontSize: "18px",
       fontWeight: 400,
-      lineHeight: 1.3,
+      lineHeight: 1.4,
       color: "#3b3b3b",
     },
   },
@@ -50,7 +56,7 @@ const theme = createTheme({
           boxShadow: "none",
           margin: "10px 0px",
           "&:hover": {
-            backgroundColor: "#de2691",
+            backgroundColor: "#de3195",
           },
         },
       },
@@ -58,7 +64,7 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          margin: "10px 0px",
+          margin: "17px 0px 22px 0px",
         },
       },
     },
@@ -78,13 +84,19 @@ const theme = createTheme({
         },
       },
     },
-    /*MuiFormLabel: {
+    MuiFormHelperText: {
       styleOverrides: {
         root: {
-          color: "#c90477",
+          fontSize: "14px",
+          margin: 0,
+          paddingLeft: "14px",
+          left: 0,
+          bottom: -28,
+          position: "absolute",
+          zIndex: 1,
         },
       },
-    },*/
+    },
   },
 });
 

@@ -19,7 +19,7 @@ const Profile = () => {
   } else {
     return (
       <StyledWrapper>
-        <StyledDiv>
+        <div>
           <section>
             <Typography variant="h2">{user.name}</Typography>
             <Button
@@ -30,24 +30,34 @@ const Profile = () => {
               Logga ut
             </Button>
           </section>
-          {insurances.map((item) => (
-            <section key={item.id}>
-              <Typography variant="h1">{item.title}</Typography>
-              <Typography variant="h3">{item.preamble}</Typography>
-              <Typography variant="body1">{item.body}</Typography>
-              <Button
-                target="_blank"
-                rel="noopener noreferrer"
-                href={item.url}
-                color="primary"
-                size="small"
-                variant="contained"
-              >
-                Läs mer
-              </Button>
-            </section>
-          ))}
-        </StyledDiv>
+          {insurances ? (
+            insurances.map((item) => (
+              <StyledSection key={item.id}>
+                <Typography variant="h1">{item.title}</Typography>
+                <Typography variant="h3">{item.preamble}</Typography>
+                <Typography variant="body1">{item.body}</Typography>
+                <Button
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={item.url}
+                  color="neutral"
+                  variant="contained"
+                  sx={{
+                    marginTop: "17px",
+                    marginBottom: "0px",
+                    "&:hover": {
+                      backgroundColor: "#ffffff",
+                    },
+                  }}
+                >
+                  Läs mer
+                </Button>
+              </StyledSection>
+            ))
+          ) : (
+            <Typography variant="h1">Inga försäkringar hittades!</Typography>
+          )}
+        </div>
       </StyledWrapper>
     );
   }
@@ -55,22 +65,22 @@ const Profile = () => {
 const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 40px;
-`;
-const StyledDiv = styled.div`
-  background-color: white;
-  padding: 35px;
-  border-radius: 15px;
-  width: 600px;
-  height: auto;
-  margin: 0px;
-  box-shadow: 7px 12px 30px #346980;
-  @media (max-width: 900px) {
-    width: 80%;
-    margin: 0px;
-  }
-  @media (max-width: 500px) {
-    padding: 35px 20px 35px 20px;
+  margin-bottom: 40px;
+
+  div {
+    background-color: white;
+    margin-top: 40px;
+    padding: 25px 35px;
+    border-radius: 15px;
+    width: 650px;
+    height: auto;
+    box-shadow: 7px 12px 30px #346980;
+    @media (max-width: 900px) {
+      width: 80%;
+    }
+    @media (max-width: 500px) {
+      padding: 35px 20px 35px 20px;
+    }
   }
 
   section:first-of-type {
@@ -78,19 +88,21 @@ const StyledDiv = styled.div`
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    padding: 0px 0px 30px 25px;
+    padding: 0px 0px 20px 25px;
     background: none;
     @media (max-width: 500px) {
       padding: 0px 0px 20px 0px;
     }
   }
-  section {
-    background: #ecf4f8;
-    padding: 25px;
-    border-radius: 10px;
-    @media (max-width: 500px) {
-      padding: 30px 20px;
-    }
+`;
+
+const StyledSection = styled.section`
+  background: #ecf4f8;
+  padding: 30px 25px;
+  margin: 0px 0px 20px 0px;
+  border-radius: 10px;
+  @media (max-width: 500px) {
+    padding: 30px 20px;
   }
 `;
 export default Profile;

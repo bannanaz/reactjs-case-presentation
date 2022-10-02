@@ -9,10 +9,17 @@ import axios from "axios";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
+  const [helperText, setHelperText] = useState("");
+  const [errors, setErrors] = useState(false);
+
   const history = useHistory();
 
   const handleInput = (e) => {
     setUserName(e.target.value);
+    if (errors && helperText) {
+      setHelperText("");
+      setErrors(false);
+    }
   };
 
   const getUserData = async () => {
@@ -22,8 +29,13 @@ const Login = () => {
       );
       let data = response.data;
       const userData = data.find((element) => element.login === userName);
-      localStorage.setItem("currentUser", JSON.stringify(userData));
-      getActiveInsuranceIds(userData.id);
+      if (userData) {
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        getActiveInsuranceIds(userData.id);
+      } else {
+        setHelperText("Felaktigt användarnamn, försök igen!");
+        setErrors(true);
+      }
     } catch (error) {
       // Handle Error Here
       console.log(error);
@@ -64,7 +76,19 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    getUserData();
+    if (userName) {
+      getUserData();
+    } else {
+      setHelperText("Användarnamn saknas!");
+      setErrors(true);
+    }
+  };
+
+  const validateInput = () => {
+    if (userName === "") {
+      setHelperText("Användarnamn saknas!");
+      setErrors(true);
+    }
   };
 
   return (
@@ -78,6 +102,9 @@ const Login = () => {
           variant="outlined"
           name="userName"
           onInput={handleInput}
+          onBlur={validateInput}
+          error={errors}
+          helperText={helperText}
         ></TextField>
         <Button variant="contained" color="secondary" type="submit">
           Logga in
