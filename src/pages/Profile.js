@@ -1,36 +1,57 @@
 import styled from "@emotion/styled";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useHistory } from "react-router-dom";
 
 const Profile = () => {
-  return (
-    <StyledWrapper>
-      <StyledDiv>
-        <section>
-          <Typography variant="h2">Elisabet Österberg Jansson</Typography>
-          <Button color="secondary" variant="contained">
-            Logga ut
-          </Button>
-        </section>
-        <section>
-          <Typography variant="h1">
-            Det här är en jättebra försäkring av det allra bästa slag!
-          </Typography>
-          <Typography variant="h3">Beskrivning av försäkring</Typography>
-          <Typography variant="body1">
-            Lorem Ipsum is simply dummy text of the printing and typesett
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged.
-          </Typography>
-        </section>
-      </StyledDiv>
-    </StyledWrapper>
-  );
-};
+  const history = useHistory();
 
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const insurances = JSON.parse(localStorage.getItem("userInsurances"));
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userInsurances");
+    history.push("/");
+  };
+  if (!user) {
+    history.push("/");
+  } else {
+    return (
+      <StyledWrapper>
+        <StyledDiv>
+          <section>
+            <Typography variant="h2">{user.name}</Typography>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={handleLogout}
+            >
+              Logga ut
+            </Button>
+          </section>
+          {insurances.map((item) => (
+            <section key={item.id}>
+              <Typography variant="h1">{item.title}</Typography>
+              <Typography variant="h3">{item.preamble}</Typography>
+              <Typography variant="body1">{item.body}</Typography>
+              <Button
+                target="_blank"
+                rel="noopener noreferrer"
+                href={item.url}
+                color="primary"
+                size="small"
+                variant="contained"
+              >
+                Läs mer
+              </Button>
+            </section>
+          ))}
+        </StyledDiv>
+      </StyledWrapper>
+    );
+  }
+};
 const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;

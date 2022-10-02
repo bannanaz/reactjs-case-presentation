@@ -11,6 +11,7 @@ const theme = createTheme({
       light: "#de2691",
     },
   },
+
   typography: {
     fontFamily: `"Libre Franklin", "sans-serif"`,
     h1: {

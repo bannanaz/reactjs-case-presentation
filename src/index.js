@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
+import "./styles/index.css";
+import App from "./pages/App";
 import { ThemeProvider } from "@mui/material";
-import theme from "./Theme";
+import theme from "./styles/Theme";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

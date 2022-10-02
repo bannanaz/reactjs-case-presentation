@@ -1,22 +1,85 @@
 import * as React from "react";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import axios from "axios";
 
 const Login = () => {
+  const [userName, setUserName] = useState("");
+  const history = useHistory();
+
+  const handleInput = (e) => {
+    setUserName(e.target.value);
+  };
+
+  const getUserData = async () => {
+    try {
+      const response = await axios.get(
+        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/users/"
+      );
+      let data = response.data;
+      const userData = data.find((element) => element.login === userName);
+      localStorage.setItem("currentUser", JSON.stringify(userData));
+      getActiveInsuranceIds(userData.id);
+    } catch (error) {
+      // Handle Error Here
+      console.log(error);
+    }
+  };
+
+  const getActiveInsuranceIds = async (id) => {
+    try {
+      const response = await axios.get(
+        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/user_insurances"
+      );
+      let data = response.data;
+      let activeInsuranceId = data[id];
+      getActiveInsurances(activeInsuranceId);
+    } catch (error) {
+      // Handle Error Here
+      console.log(error);
+    }
+  };
+
+  const getActiveInsurances = async (id) => {
+    try {
+      const response = await axios.get(
+        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/insurances"
+      );
+      let data = response.data;
+      console.log(data);
+      let activeInsurances = data.filter(function (item) {
+        return id.indexOf(item.id) !== -1;
+      });
+      localStorage.setItem("userInsurances", JSON.stringify(activeInsurances));
+      history.push("/profile");
+    } catch (error) {
+      // Handle Error Here
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    getUserData();
+  };
+
   return (
     <StyledDiv>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Typography variant="h1">Logga in med ditt användarnamn</Typography>
         <TextField
           fullWidth
           color="secondary"
-          id="username"
           label="Ange ditt användarnamn"
           variant="outlined"
+          name="userName"
+          onInput={handleInput}
         ></TextField>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" type="submit">
           Logga in
         </Button>
       </form>
