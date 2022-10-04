@@ -25,24 +25,37 @@ const theme = createTheme({
       fontWeight: 600,
       color: "#3b3b3b",
       marginBottom: "15px",
+      "@media (max-width:600px)": {
+        fontSize: "22px",
+      },
     },
     h2: {
       fontSize: "20px",
       fontWeight: 600,
       color: "#3b3b3b",
       lineHeight: 1.7,
+      "@media (max-width:600px)": {
+        fontSize: "18px",
+      },
     },
     h3: {
       fontSize: "20px",
       fontWeight: 600,
       color: "#3b3b3b",
       marginBottom: "12px",
+      "@media (max-width:600px)": {
+        fontSize: "18px",
+      },
     },
     body1: {
       fontSize: "18px",
       fontWeight: 400,
       lineHeight: 1.4,
       color: "#3b3b3b",
+      "@media (max-width:600px)": {
+        fontSize: "16px",
+        lineHeight: 1.3,
+      },
     },
   },
   components: {

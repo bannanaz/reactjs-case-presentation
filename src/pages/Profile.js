@@ -11,10 +11,11 @@ const Profile = (props) => {
   const [insurances, setInsurances] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
+
   //Get current user object from localstorage
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
-  const getActiveInsuranceIds = async () => {
+  const getInsuranceIds = async () => {
     //Get all users insurance ids from database
     try {
       const response = await axios.get(
@@ -56,7 +57,7 @@ const Profile = (props) => {
 
   //Get current users insurances on mount
   useEffect(() => {
-    getActiveInsuranceIds();
+    getInsuranceIds();
   }, []);
 
   //Redirect to login page if user logs out, empty localstorage
