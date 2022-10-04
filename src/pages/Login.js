@@ -1,4 +1,5 @@
 import * as React from "react";
+import { withSnackbar } from "../components/ErrorSnackbar";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
@@ -7,13 +8,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import axios from "axios";
 
-const Login = () => {
+const Login = (props) => {
   const [userName, setUserName] = useState("");
   const [helperText, setHelperText] = useState("");
   const [errors, setErrors] = useState(false);
-
   const history = useHistory();
 
+  //Save input to state and remove errors on input
   const handleInput = (e) => {
     setUserName(e.target.value);
     if (errors && helperText) {
@@ -22,70 +23,50 @@ const Login = () => {
     }
   };
 
-  const getUserData = async () => {
-    try {
-      const response = await axios.get(
-        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/users/"
-      );
-      let data = response.data;
-      const userData = data.find((element) => element.login === userName);
-      if (userData) {
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        getActiveInsuranceIds(userData.id);
-      } else {
-        setHelperText("Felaktigt användarnamn, försök igen!");
-        setErrors(true);
-      }
-    } catch (error) {
-      // Handle Error Here
-      console.log(error);
-    }
-  };
-
-  const getActiveInsuranceIds = async (id) => {
-    try {
-      const response = await axios.get(
-        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/user_insurances"
-      );
-      let data = response.data;
-      let activeInsuranceId = data[id];
-      getActiveInsurances(activeInsuranceId);
-    } catch (error) {
-      // Handle Error Here
-      console.log(error);
-    }
-  };
-
-  const getActiveInsurances = async (id) => {
-    try {
-      const response = await axios.get(
-        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/insurances"
-      );
-      let data = response.data;
-      console.log(data);
-      let activeInsurances = data.filter(function (item) {
-        return id.indexOf(item.id) !== -1;
-      });
-      localStorage.setItem("userInsurances", JSON.stringify(activeInsurances));
-      history.push("/profile");
-    } catch (error) {
-      // Handle Error Here
-      console.log(error);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (userName) {
-      getUserData();
-    } else {
-      setHelperText("Användarnamn saknas!");
+  //Validate input on blur, if no username show error
+  const handleValidation = () => {
+    if (!userName) {
+      setHelperText("Vänligen ange ditt användarnamn");
       setErrors(true);
     }
   };
 
-  const validateInput = () => {
-    if (userName === "") {
+  const loginUser = async () => {
+    //Get all users from database
+    try {
+      const response = await axios.get(
+        "https://my-json-server.typicode.com/proactivehealth/work-test-sample/users/"
+      );
+      //Check if user exists and get userobject
+      let data = response.data;
+      const userObj = data.find((element) => element.login === userName);
+      redirectUser(userObj);
+      //If user exists, save user to localstorage and redirect to profile page
+    } catch (error) {
+      //Show error snackbar from ErrorSnackbar component
+      props.showErrorSnackbar(
+        "Användaren kunde inte hämtas, försök igen! " + error.message
+      );
+    }
+  };
+
+  //Redirect to profile page and save user object to localstorage
+  const redirectUser = (user) => {
+    if (user) {
+      history.push("/profile");
+      localStorage.setItem("currentUser", JSON.stringify(user));
+    } else {
+      setHelperText("Användaren finns inte, försök igen!");
+      setErrors(true);
+    }
+  };
+
+  //Submit login form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (userName) {
+      loginUser();
+    } else {
       setHelperText("Användarnamn saknas!");
       setErrors(true);
     }
@@ -102,7 +83,7 @@ const Login = () => {
           variant="outlined"
           name="userName"
           onInput={handleInput}
-          onBlur={validateInput}
+          onBlur={handleValidation}
           error={errors}
           helperText={helperText}
         ></TextField>
@@ -135,4 +116,4 @@ const StyledDiv = styled.div`
   }
 `;
 
-export default Login;
+export default withSnackbar(Login);
